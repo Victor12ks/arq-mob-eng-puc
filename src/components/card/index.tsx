@@ -1,10 +1,20 @@
-import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-import { style } from "./style";
 import { FormProps } from "../../types/form";
 import { number } from "yup";
+import {
+  Box,
+  Divider,
+  HStack,
+  VStack,
+  Text,
+  Center,
+  Stack,
+  Heading,
+  AspectRatio,
+} from "native-base";
 
 type Props = {
   data: FormProps;
@@ -13,37 +23,79 @@ type Props = {
 
 export function Card({ data, onPress }: Props) {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
-  function togglePasswordIsVisible() {
-    setPasswordIsVisible((prevState) => !prevState);
-  }
-
   return (
-    <View style={style.container}>
-      <View style={style.content}>
-        <View>
-          <View style={style.row}>
-            <Text style={style.name}>
-              Nome:{`${data.firstName} ${data.lastName}`}
-            </Text>
-            <Text style={style.phone}>Telefone:{data.phone}</Text>
-          </View>
+    <Box alignItems="center">
+      <Box
+        minWidth="100%"
+        maxW="80"
+        rounded="lg"
+        overflow="hidden"
+        borderColor="coolGray.200"
+        borderWidth="1"
+        _dark={{
+          borderColor: "coolGray.600",
+          backgroundColor: "gray.700",
+        }}
+        _web={{
+          shadow: 2,
+          borderWidth: 0,
+        }}
+        _light={{
+          backgroundColor: "gray.50",
+        }}
+      >
+        <Box>
+          <Center
+            bg="violet.500"
+            _dark={{
+              bg: "violet.400",
+            }}
+            _text={{
+              color: "warmGray.50",
+              fontWeight: "700",
+              fontSize: "xs",
+            }}
+            position="absolute"
+            bottom="0"
+            px="3"
+            py="1.5"
+          >
+            PHOTOS
+          </Center>
+        </Box>
 
-          <View style={style.row}>
-            <Text style={style.name}>
-              Endereço:{`${data.street} ${data.number}`}
+        <Stack p="4" space={1}>
+          <Stack space={1}>
+            <Heading size="md" ml="-1">
+              {`${data.firstName} ${data.lastName}`}{" "}
+            </Heading>
+            <Text
+              fontSize="xs"
+              _light={{
+                color: "violet.500",
+              }}
+              _dark={{
+                color: "violet.400",
+              }}
+              fontWeight="500"
+              ml=".5"
+              mt="-1"
+            >
+              {data.city}
             </Text>
-            <Text style={style.phone}>CIdade:{data.city}</Text>
-          </View>
-        </View>
-      </View>
-
-      <TouchableOpacity style={style.button} onPress={onPress}>
-        <MaterialCommunityIcons
-          name="account-edit"
-          color={"#888D97"}
-          size={26}
-        />
-      </TouchableOpacity>
-    </View>
+          </Stack>
+          <Text fontWeight="00">{`${data.street}, ${data.number}  - ${data.district}`}</Text>
+          <HStack space={3} justifyContent="flex-end" px={5}>
+            <TouchableOpacity onPress={onPress}>
+              <MaterialCommunityIcons
+                name="account-edit"
+                color={"#888D97"}
+                size={26}
+              />
+            </TouchableOpacity>
+          </HStack>
+        </Stack>
+      </Box>
+    </Box>
   );
 }
