@@ -29,11 +29,11 @@ export const Routes = () => {
           }}
         />
         <Tab.Screen
-          // listeners={({ navigation }) => ({
-          //   focus: () => {
-          //     navigation.setParams({ id: undefined });
-          //   },
-          // })}
+          listeners={({ navigation }) => ({
+            focus: () => {
+              navigation.setParams({ id: undefined });
+            },
+          })}
           name="User"
           component={User}
           options={{

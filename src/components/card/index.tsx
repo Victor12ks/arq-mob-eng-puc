@@ -24,7 +24,7 @@ type Props = {
 export function Card({ data, onPress }: Props) {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   return (
-    <Box alignItems="center">
+    <Box alignItems="center" pb={2}>
       <Box
         minWidth="100%"
         maxW="80"
@@ -85,7 +85,7 @@ export function Card({ data, onPress }: Props) {
             </Text>
           </Stack>
           <Text fontWeight="00">{`${data.street}, ${data.number}  - ${data.district}`}</Text>
-          <HStack space={3} justifyContent="flex-end" px={5}>
+          <Stack space={1} justifyContent="flex-end" pl={5}>
             <TouchableOpacity onPress={onPress}>
               <MaterialCommunityIcons
                 name="account-edit"
@@ -93,7 +93,7 @@ export function Card({ data, onPress }: Props) {
                 size={26}
               />
             </TouchableOpacity>
-          </HStack>
+          </Stack>
         </Stack>
       </Box>
     </Box>

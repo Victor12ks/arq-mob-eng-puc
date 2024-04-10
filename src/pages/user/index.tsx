@@ -1,13 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Controller,
-  useFieldArray,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
+import React, { useCallback, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Center, HStack, Heading, Modal, VStack } from "native-base";
 import { Input } from "../../components/input/index";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../../components/button/index";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,7 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-tiny-toast";
 import uuid from "react-native-uuid";
 import { FormProps } from "../../types/form";
-import { style } from "./style";
 import { schemaRegister } from "./util";
 import { AddressService } from "../../services/address";
 import Address from "../../Models/address";
@@ -28,7 +21,6 @@ import { ExcluirItemDialog } from "../../components/dialog";
 type UserRootProp = BottomTabScreenProps<RootTabParamList, "User">;
 
 export const User = ({ route, navigation }: UserRootProp) => {
-  const isEditing = !!route?.params?.id;
   const [postalCode, setPostalCode] = useState("");
   const [address, setAddress] = useState<Address>();
 
@@ -66,20 +58,12 @@ export const User = ({ route, navigation }: UserRootProp) => {
     navigation.navigate("Home");
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      setLoading(true);
-    }, [])
-  );
   const handlerRegister = async (data: FormProps) => {
     data.id = uuid.v4().toString();
     try {
       const reponseData = await AsyncStorage.getItem("@crud_form:usuario2");
-      console.log({ reponseData });
       const dbData = reponseData ? JSON.parse(reponseData!) : [];
-      console.log({ dbData });
       const previewData = [...dbData, data];
-      console.log({ previewData });
       await AsyncStorage.setItem(
         "@crud_form:usuario2",
         JSON.stringify(previewData)
@@ -106,10 +90,11 @@ export const User = ({ route, navigation }: UserRootProp) => {
           )
         );
       }
-      setLoading(false);
     } catch (error) {
       console.log(error);
       goHome();
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -157,36 +142,26 @@ export const User = ({ route, navigation }: UserRootProp) => {
           JSON.stringify(previewData)
         );
         Toast.showSuccess("Usuário atualizado com sucesso");
-        setLoading(false);
         setSearching(false);
         goHome();
       }
     } catch (error) {
-      setLoading(false);
       Toast.showSuccess("Ocorreu um erro ao atualizar o usuário");
+    } finally {
+      setLoading(false);
     }
   };
-
-  // usefoc(() => {
-  //   console.log(route?.params?.id);
-  //   if (route?.params?.id) {
-  //     handlerSearcherUser(route?.params?.id);
-  //   } else {
-  //     reset();
-  //     setSearching(false);
-  //     setLoading(false);
-  //   }
-  // }, [route]);
 
   useFocusEffect(
     useCallback(() => {
       console.log(route?.params?.id);
       if (route?.params?.id) {
+        setLoading(true);
         handlerSearcherUser(route?.params?.id);
       } else {
-        reset();
         setSearching(false);
         setLoading(false);
+        reset();
       }
     }, [route])
   );
@@ -195,14 +170,6 @@ export const User = ({ route, navigation }: UserRootProp) => {
     return <ActivityIndicator size={"large"} />;
   }
 
-  // useEffect(() => {
-  //   first
-
-  //   return () => {
-  //     second
-  //   }
-  // }, [third])
-
   return (
     <KeyboardAwareScrollView>
       <VStack
@@ -210,7 +177,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
         flex={1}
         px={5}
         pb={100}
-        style={style.container}
+        backgroundColor="#D9E4DF"
       >
         <Center>
           <Heading my={5} color={"#265C4B"}>

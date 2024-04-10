@@ -1,4 +1,3 @@
-import { background } from "native-base/lib/typescript/theme/styled-system";
 import React from "react";
 import { Button, HStack, Text, VStack } from "native-base";
 
