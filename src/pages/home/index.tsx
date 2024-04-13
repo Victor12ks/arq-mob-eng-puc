@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlatList, Text, Box } from "native-base";
 import { FormProps } from "../../types/form";
 import { Card } from "../../components/card";
 import { useFocusEffect } from "@react-navigation/native";
 import { Input } from "../../components/input";
+import { HomeProps } from "../../types/home";
 
-type Props = {
-  navigation: any;
-};
 
-export const Home = ({ navigation }: Props) => {
+export const Home = ({ navigation }: HomeProps) => {
   useFocusEffect(
     useCallback(() => {
       handlerFetchData();

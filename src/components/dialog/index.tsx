@@ -1,11 +1,6 @@
 import React from "react";
 import { Button, HStack, Text, VStack } from "native-base";
-
-interface ExcluirItemDialogProps {
-  isVisible: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
-}
+import { ExcluirItemDialogProps } from "../../types/dialog";
 
 export const ExcluirItemDialog: React.FC<ExcluirItemDialogProps> = ({
   isVisible,

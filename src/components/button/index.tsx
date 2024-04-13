@@ -1,10 +1,8 @@
 import { Button as ButtonNativeBase, IButtonProps, Text } from "native-base";
+import { ButtonProps } from "../../types/button";
 
-type Props = IButtonProps & {
-  title: string;
-  color?: string;
-};
-export function Button({ title, color = "#265C4B", ...res }: Props) {
+
+export function Button({ title, color = "#265C4B", ...res }: ButtonProps) {
   return (
     <ButtonNativeBase
       w="full"

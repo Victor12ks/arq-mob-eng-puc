@@ -1,28 +1,11 @@
-import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { FormProps } from "../../types/form";
-import { number } from "yup";
-import {
-  Box,
-  Divider,
-  HStack,
-  VStack,
-  Text,
-  Center,
-  Stack,
-  Heading,
-  AspectRatio,
-} from "native-base";
+import { Box, Text, Center, Stack, Heading } from "native-base";
+import { CardProps } from "../../types/card";
 
-type Props = {
-  data: FormProps;
-  onPress: () => void;
-};
-
-export function Card({ data, onPress }: Props) {
-  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+export function Card({ data, onPress }: CardProps) {
   return (
     <Box alignItems="center" pb={2}>
       <Box

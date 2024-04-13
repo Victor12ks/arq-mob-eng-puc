@@ -1,15 +1,12 @@
 import React from "react";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../pages/home/index";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { User } from "../pages/user";
-import { MyTheme, TabTheme } from "./Util";
+import { MyTheme, TabTheme } from "./util";
+import { RootTabParamList } from "../types/router";
 
-export type RootTabParamList = {
-  Home: undefined;
-  User: { id: string };
-};
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
