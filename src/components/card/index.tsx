@@ -27,7 +27,6 @@ export function Card({ data, onPress }: Props) {
     <Box alignItems="center" pb={2}>
       <Box
         minWidth="100%"
-        maxW="80"
         rounded="lg"
         overflow="hidden"
         borderColor="coolGray.200"

@@ -11,14 +11,12 @@ import uuid from "react-native-uuid";
 import { FormProps } from "../../types/form";
 import { schemaRegister } from "./util";
 import { AddressService } from "../../services/address";
-import Address from "../../Models/address";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { RootTabParamList } from "../../router";
+import Address from "../../models/address";
 import { ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ExcluirItemDialog } from "../../components/dialog";
+import { UserRootProp } from "../../types/user";
 
-type UserRootProp = BottomTabScreenProps<RootTabParamList, "User">;
 
 export const User = ({ route, navigation }: UserRootProp) => {
   const [postalCode, setPostalCode] = useState("");
@@ -38,22 +36,39 @@ export const User = ({ route, navigation }: UserRootProp) => {
 
   const handlerGetAddress = async () => {
     try {
-      const address = await AddressService.getAddress("30575380");
-      setAddress(address);
-      setValue("city", address.city);
-      setValue("district", address.district);
-      setValue("postalCode", address.postalCode);
-      setValue("state", address.state);
-      setValue("street", address.street);
-    } catch (error) {
-      Toast.showSuccess(error as string);
+      if (!postalCode) return;
+      const address = await AddressService.getAddress(postalCode);
+      if (address) {
+        setAddress(address);
+        setValue("city", address.city);
+        setValue("district", address.district);
+        setValue("postalCode", address.postalCode);
+        setValue("state", address.state);
+        setValue("street", address.street);
+      }
+    } catch (error: any) {
+      showError(error?.message);
     }
   };
 
+  const showError = (message: string) => {
+    Toast.show(message, {
+      position: Toast.position.CENTER,
+      containerStyle: { backgroundColor: "#cc0000" },
+      textStyle: {},
+      imgStyle: {},
+      mask: true,
+      maskStyle: {},
+      textColor: "white",
+    });
+  };
+
   const goHome = () => {
+    setAddress({} as Address);
     setshowDeleteDialog(false);
     setLoading(false);
     setSearching(false);
+    setPostalCode("");
     reset();
     navigation.navigate("Home");
   };
@@ -70,8 +85,8 @@ export const User = ({ route, navigation }: UserRootProp) => {
       );
       Toast.showSuccess("Usuário registrado com sucesso");
       goHome();
-    } catch (e) {
-      Toast.showSuccess("Erro ao registrar usuário " + e);
+    } catch (error: any) {
+      showError(error?.message);
     }
   };
 
@@ -82,6 +97,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
       const dbData: FormProps[] = reponseData ? JSON.parse(reponseData!) : [];
       const user = dbData.find((u) => u.id == id);
       if (user) {
+        setPostalCode(user.postalCode);
         setSearching(true);
         Object.keys(user).forEach((key) =>
           setValue(
@@ -90,8 +106,8 @@ export const User = ({ route, navigation }: UserRootProp) => {
           )
         );
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      showError(error?.message);
       goHome();
     } finally {
       setLoading(false);
@@ -122,8 +138,8 @@ export const User = ({ route, navigation }: UserRootProp) => {
         Toast.showSuccess("Usuário atualizado com sucesso");
         goHome();
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      showError(error?.message);
     }
   };
 
@@ -145,8 +161,8 @@ export const User = ({ route, navigation }: UserRootProp) => {
         setSearching(false);
         goHome();
       }
-    } catch (error) {
-      Toast.showSuccess("Ocorreu um erro ao atualizar o usuário");
+    } catch (error: any) {
+      showError(error?.message);
     } finally {
       setLoading(false);
     }
@@ -247,7 +263,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
                 onBlur={() => {
                   handlerGetAddress();
                 }}
-                value={value}
+                // value={value}
                 defaultValue={postalCode}
               />
             )}

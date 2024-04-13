@@ -1,11 +1,13 @@
-import Address from "../Models/address";
+import Address from "../models/address";
 
 export class AddressService {
-  static async getAddress(postCode: string) {
-    if (!postCode) throw new Error("Favor, informe um CEP válido.");
+  static async getAddress(postalCode: string) {
+    var value = postalCode.replace(/[^0-9]/g, "");
+    if (!value || value.length != 8)
+      throw new Error("Favor, informe um CEP válido");
     try {
       const response = await fetch(
-        `https://viacep.com.br/ws/${postCode}/json/`
+        `https://viacep.com.br/ws/${postalCode}/json/`
       );
       const data = await response.json();
       if (!data.erro) {
@@ -19,13 +21,12 @@ export class AddressService {
         return address;
       } else {
         throw new Error(
-          "Não foi encontrado nenhum endereço para o CEP informado."
+          "Não foi encontrado nenhum endereço para o CEP informado"
         );
       }
-    } catch (error) {
-      throw new Error(
-        "Ops, ocorreu um erro ao buscar o CEP, tente novamente em instantes..."
-      );
+    } catch (error: any) {
+      if (error?.message) throw new Error(error?.message);
+      throw new Error(error);
     }
   }
 }
