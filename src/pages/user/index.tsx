@@ -18,9 +18,9 @@ import { ExcluirItemDialog } from "../../components/dialog";
 import { UserRootProp } from "../../types/user";
 
 export const User = ({ route, navigation }: UserRootProp) => {
+  const [editingId, setEditingId] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [address, setAddress] = useState<Address>();
-
   const [loading, setLoading] = useState(true);
 
   const {
@@ -29,7 +29,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
     setValue,
     reset,
     formState: { errors },
-    getValues
+    getValues,
   } = useForm<FormProps>({
     resolver: yupResolver(schemaRegister) as any,
   });
@@ -53,7 +53,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
   const showError = (message: string) => {
     Toast.show(message, {
       position: Toast.position.CENTER,
-      containerStyle: { backgroundColor: "#cc0000" },
+      containerStyle: { backgroundColor: "#8FC1B5" },
       textStyle: {},
       imgStyle: {},
       mask: true,
@@ -63,12 +63,13 @@ export const User = ({ route, navigation }: UserRootProp) => {
   };
 
   const goHome = () => {
-    setAddress({} as Address);
     setshowDeleteDialog(false);
     setLoading(false);
     setSearching(false);
     setPostalCode("");
+    setEditingId("");
     reset();
+    setAddress(undefined);
     navigation.navigate("Home");
   };
 
@@ -96,6 +97,13 @@ export const User = ({ route, navigation }: UserRootProp) => {
       const dbData: FormProps[] = reponseData ? JSON.parse(reponseData!) : [];
       const user = dbData.find((u) => u.id == id);
       if (user) {
+        setAddress({
+          city: user.city,
+          district: user.district,
+          postalCode: user.postalCode,
+          state: user.state,
+          street: user.street,
+        });
         setPostalCode(user.postalCode);
         setSearching(true);
         Object.keys(user).forEach((key) =>
@@ -120,12 +128,13 @@ export const User = ({ route, navigation }: UserRootProp) => {
   };
 
   const deleteUser = async () => {
-    const id = route?.params?.id;
     try {
       setLoading(true);
       const reponseData = await AsyncStorage.getItem("@crud_form:usuario2");
       const dbData: FormProps[] = reponseData ? JSON.parse(reponseData!) : [];
-      const userIndex = dbData.findIndex((u) => u.id == id);
+      console.log({ dbData });
+      const userIndex = dbData.findIndex((u) => u.id == editingId);
+      console.log({ userIndex });
       if (userIndex !== -1) {
         dbData.splice(userIndex, 1);
         await AsyncStorage.setItem(
@@ -138,6 +147,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
     } catch (error: any) {
       showError(error?.message);
     }
+    setEditingId("");
   };
 
   const handlerAlterRegister = async (data: FormProps) => {
@@ -162,11 +172,13 @@ export const User = ({ route, navigation }: UserRootProp) => {
     } finally {
       setLoading(false);
     }
+    setEditingId("");
   };
 
   useFocusEffect(
     useCallback(() => {
       if (route?.params?.id) {
+        setEditingId(route?.params?.id);
         setLoading(true);
         handlerSearcherUser(route?.params?.id);
       } else {
@@ -175,6 +187,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
         reset();
       }
       resetPostalCode();
+      setshowDeleteDialog(false);
     }, [route])
   );
 

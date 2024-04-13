@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { Box, Text, Center, Stack, Heading } from "native-base";
+import { Box, Text, Stack, Heading } from "native-base";
 import { CardProps } from "../../types/card";
 
 export function Card({ data, onPress }: CardProps) {
