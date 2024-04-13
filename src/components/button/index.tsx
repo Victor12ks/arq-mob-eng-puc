@@ -9,7 +9,7 @@ export function Button({ title, color = "#265C4B", ...res }: ButtonProps) {
       h={20}
       bg={color}
       _pressed={{
-        bgColor: "#146551",
+        bgColor: "#365950",
       }}
       {...res}
     >

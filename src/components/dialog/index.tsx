@@ -1,26 +1,24 @@
 import React from "react";
-import { Button, HStack, Text, VStack } from "native-base";
+import { Button, HStack, Heading, Spacer, Text, VStack } from "native-base";
 import { ExcluirItemDialogProps } from "../../types/dialog";
 
 export const ExcluirItemDialog: React.FC<ExcluirItemDialogProps> = ({
   isVisible,
   onCancel,
   onConfirm,
+  userName,
 }) => {
   if (!isVisible) return null;
-
   return (
-    <VStack bg={"#FAFFF5"} p={7}>
-      <Text fontSize={16} bold>
-        Deseja realmente excluir este item?
-      </Text>
+    <VStack bg={"#FAFFF5"} p={7} space={2}>
+      <Heading size="md">Deseja excluir o usuário {userName} ?</Heading>
       <HStack space={2} justifyContent="center">
         <Button
           rounded="md"
           shadow={3}
-          h={100}
+          h={20}
           w={150}
-          bgColor={"#FCA53A"}
+          bgColor={"#146551"}
           onPress={onCancel}
         >
           Cancelar
@@ -28,9 +26,9 @@ export const ExcluirItemDialog: React.FC<ExcluirItemDialogProps> = ({
         <Button
           rounded="md"
           shadow={3}
-          h={100}
+          h={20}
           w={150}
-          bgColor={"#FC3F3A"}
+          bgColor={"#388C77"}
           onPress={onConfirm}
         >
           Confirmar

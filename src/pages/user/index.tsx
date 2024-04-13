@@ -17,7 +17,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ExcluirItemDialog } from "../../components/dialog";
 import { UserRootProp } from "../../types/user";
 
-
 export const User = ({ route, navigation }: UserRootProp) => {
   const [postalCode, setPostalCode] = useState("");
   const [address, setAddress] = useState<Address>();
@@ -30,10 +29,10 @@ export const User = ({ route, navigation }: UserRootProp) => {
     setValue,
     reset,
     formState: { errors },
+    getValues
   } = useForm<FormProps>({
     resolver: yupResolver(schemaRegister) as any,
   });
-
   const handlerGetAddress = async () => {
     try {
       if (!postalCode) return;
@@ -116,8 +115,8 @@ export const User = ({ route, navigation }: UserRootProp) => {
 
   const [searching, setSearching] = useState(false);
   const [showDeleteDialog, setshowDeleteDialog] = useState(false);
-  const setShowDeleteDialog = (ok: boolean) => {
-    setshowDeleteDialog(ok);
+  const setShowDeleteDialog = (open: boolean) => {
+    setshowDeleteDialog(open);
   };
 
   const deleteUser = async () => {
@@ -126,9 +125,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
       setLoading(true);
       const reponseData = await AsyncStorage.getItem("@crud_form:usuario2");
       const dbData: FormProps[] = reponseData ? JSON.parse(reponseData!) : [];
-      console.log({ id });
       const userIndex = dbData.findIndex((u) => u.id == id);
-      console.log(userIndex);
       if (userIndex !== -1) {
         dbData.splice(userIndex, 1);
         await AsyncStorage.setItem(
@@ -152,7 +149,6 @@ export const User = ({ route, navigation }: UserRootProp) => {
       if (userIndex >= 0) {
         dbData.splice(userIndex, 1);
         const previewData = [...dbData, data];
-        console.log("pre", { previewData });
         await AsyncStorage.setItem(
           "@crud_form:usuario2",
           JSON.stringify(previewData)
@@ -170,7 +166,6 @@ export const User = ({ route, navigation }: UserRootProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(route?.params?.id);
       if (route?.params?.id) {
         setLoading(true);
         handlerSearcherUser(route?.params?.id);
@@ -179,8 +174,14 @@ export const User = ({ route, navigation }: UserRootProp) => {
         setLoading(false);
         reset();
       }
+      resetPostalCode();
     }, [route])
   );
+
+  const resetPostalCode = () => {
+    setPostalCode("");
+    setValue("postalCode", "");
+  };
 
   if (loading) {
     return <ActivityIndicator size={"large"} />;
@@ -263,7 +264,6 @@ export const User = ({ route, navigation }: UserRootProp) => {
                 onBlur={() => {
                   handlerGetAddress();
                 }}
-                // value={value}
                 defaultValue={postalCode}
               />
             )}
@@ -347,7 +347,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
                 rounded="md"
                 shadow={3}
                 title="Alterar"
-                color="#F48B20"
+                color="#146551"
                 onPress={handleSubmit(handlerAlterRegister)}
               />
             </HStack>
@@ -356,7 +356,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
                 rounded="md"
                 shadow={3}
                 title="Excluir"
-                color="#CC0707"
+                color="#388C77"
                 onPress={() => setShowDeleteDialog(true)}
               />
             </HStack>
@@ -364,6 +364,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
         ) : (
           <Button
             title="Salvar"
+            color="#146551"
             onPress={handleSubmit(handlerRegister)}
           ></Button>
         )}
@@ -373,6 +374,7 @@ export const User = ({ route, navigation }: UserRootProp) => {
           isVisible={showDeleteDialog}
           onCancel={() => setShowDeleteDialog(false)}
           onConfirm={deleteUser}
+          userName={getValues("firstName")}
         ></ExcluirItemDialog>
       </Modal>
     </KeyboardAwareScrollView>
