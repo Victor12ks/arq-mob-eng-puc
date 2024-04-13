@@ -132,7 +132,6 @@ export const User = ({ route, navigation }: UserRootProp) => {
       setLoading(true);
       const reponseData = await AsyncStorage.getItem("@crud_form:usuario2");
       const dbData: FormProps[] = reponseData ? JSON.parse(reponseData!) : [];
-      console.log({ dbData });
       const userIndex = dbData.findIndex((u) => u.id == editingId);
       console.log({ userIndex });
       if (userIndex !== -1) {

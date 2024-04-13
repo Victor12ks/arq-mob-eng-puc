@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, HStack, Heading, Spacer, Text, VStack } from "native-base";
+import { Button, HStack, Heading, VStack } from "native-base";
 import { ExcluirItemDialogProps } from "../../types/dialog";
 
 export const ExcluirItemDialog: React.FC<ExcluirItemDialogProps> = ({
